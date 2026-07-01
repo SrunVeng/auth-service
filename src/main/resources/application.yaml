@@ -1,0 +1,10 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: auth-service
+
+auth:
+  issuer: http://localhost:9000
+  access-token-expiration-minutes: 60

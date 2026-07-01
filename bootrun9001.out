@@ -1,0 +1,34 @@
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :resolveMainClassName UP-TO-DATE
+
+> Task :bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-07-01T14:46:14.517+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] com.dcc.authservice.AuthApplication      : Starting AuthApplication using Java 21.0.11 with PID 85328 (D:\Services\project personal\auth\build\classes\java\main started by srun.veng in D:\Services\project personal\auth)
+2026-07-01T14:46:14.521+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] com.dcc.authservice.AuthApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-07-01T14:46:15.691+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9001 (http)
+2026-07-01T14:46:15.709+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-01T14:46:15.709+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-07-01T14:46:15.773+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1198 ms
+2026-07-01T14:46:17.089+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9001 (http) with context path '/'
+2026-07-01T14:46:17.097+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] com.dcc.authservice.AuthApplication      : Started AuthApplication in 3.254 seconds (process running for 3.823)
+2026-07-01T14:46:17.101+07:00  INFO 85328 --- [auth-service] [           main] [                                                 ] c.d.sdkcentral.config.ApplicationConfig  : auth-service is ready
+2026-07-01T14:46:26.605+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-1] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-01T14:46:26.606+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-01T14:46:26.607+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-01T14:46:26.835+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-1] [f696d6464fa2b707a50fdebd294d5b76-9cac19964d923a3a] c.d.s.config.RequestLoggingFilter        : Incoming Request: POST /auth/login Body: {user_name:john,password:asd}
+2026-07-01T14:46:26.836+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-1] [f696d6464fa2b707a50fdebd294d5b76-9cac19964d923a3a] c.d.s.config.RequestLoggingFilter        : Outgoing Response: POST /auth/login Body: {"trace_id":"f696d6464fa2b707a50fdebd294d5b76","message":"Sorry, an unexpected error has occurred. Please try again.","error_code":"500","message_type":"ERROR","source":"auth-service","dev_error_code":"500","dev_message":"Sorry, an unexpected error has occurred. Please try again.","data":null,"status":"500 INTERNAL_SERVER_ERROR"}
+2026-07-01T14:46:26.936+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-2] [96e70ce98e58ed2b324b243084887a57-ab9dda4d00de7af2] c.d.s.config.RequestLoggingFilter        : Incoming Request: POST /auth/login Body: {username:john,password:asd}
+2026-07-01T14:46:26.936+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-2] [96e70ce98e58ed2b324b243084887a57-ab9dda4d00de7af2] c.d.s.config.RequestLoggingFilter        : Outgoing Response: POST /auth/login Body: {"trace_id":"96e70ce98e58ed2b324b243084887a57","message":"Sorry, an unexpected error has occurred. Please try again.","error_code":"500","message_type":"ERROR","source":"auth-service","dev_error_code":"500","dev_message":"Sorry, an unexpected error has occurred. Please try again.","data":null,"status":"500 INTERNAL_SERVER_ERROR"}
+2026-07-01T14:46:27.037+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-3] [c9179de8272b999ec08c4ecdf67bb1d2-e2dc66ba5b7e1f9f] c.d.s.config.RequestLoggingFilter        : Incoming Request: POST /auth/login Body: {username:john,password:123456}
+2026-07-01T14:46:27.038+07:00  INFO 85328 --- [auth-service] [nio-9001-exec-3] [c9179de8272b999ec08c4ecdf67bb1d2-e2dc66ba5b7e1f9f] c.d.s.config.RequestLoggingFilter        : Outgoing Response: POST /auth/login Body: {"trace_id":"c9179de8272b999ec08c4ecdf67bb1d2","message":"Sorry, an unexpected error has occurred. Please try again.","error_code":"500","message_type":"ERROR","source":"auth-service","dev_error_code":"500","dev_message":"Sorry, an unexpected error has occurred. Please try again.","data":null,"status":"500 INTERNAL_SERVER_ERROR"}
