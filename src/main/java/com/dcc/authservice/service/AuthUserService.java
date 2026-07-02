@@ -1,9 +1,9 @@
 package com.dcc.authservice.service;
 
-import com.dcc.authservice.AuthUser;
+import com.dcc.authservice.dto.LoginRequestDto;
+import com.dcc.authservice.dto.LoginResultDto;
 
 public interface AuthUserService {
 
-    AuthUser findByUsername(String username);
-
+    LoginResultDto login(LoginRequestDto login);
 }
