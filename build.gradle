@@ -20,11 +20,11 @@ repositories {
 
     maven {
         name = "sdkRepository"
-        url = uri("https://maven.pkg.github.com/SrunVeng/sdk-central")
+        url = uri("")
 
         credentials {
-            username = "srun veng"
-            password = "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"
+            username = ""
+            password = ""
         }
     }
 }
