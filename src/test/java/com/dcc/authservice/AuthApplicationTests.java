@@ -9,8 +9,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,40 +56,82 @@ class AuthApplicationTests {
 
     @Test
     void loginReturnsUnauthorizedForInvalidPassword() throws Exception {
-        HttpResponse<String> response = postLogin(Map.of("username", "john", "password", "asd"));
+        HttpResponse<String> response = postLogin(validLoginPayload("asd"));
 
         assertEquals(401, response.statusCode());
-        assertTrue(response.body().contains("\"message\":\"Invalid username or password.\""));
+        assertTrue(response.body().contains("Invalid username or password"));
     }
 
     @Test
-    void loginAcceptsUserNameAlias() throws Exception {
-        HttpResponse<String> response = postLogin(Map.of("user_name", "john", "password", "123456"));
+    void loginReturnsAccessTokenForValidCredentials() throws Exception {
+        HttpResponse<String> response = postLogin(validLoginPayload("123456"));
 
         assertEquals(200, response.statusCode());
-        assertTrue(response.body().contains("\"accessToken\""));
+        assertTrue(response.body().contains("access_token"));
+        assertTrue(response.body().contains("Bearer"));
+    }
+
+    @Test
+    void validateAcceptsValidAccessToken() throws Exception {
+        String token = extractAccessToken(postLogin(validLoginPayload("123456")).body());
+
+        HttpResponse<String> response = postValidate(Map.of("token", token));
+
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("\"valid\":true"));
+    }
+
+    @Test
+    void validateRejectsInvalidAccessToken() throws Exception {
+        HttpResponse<String> response = postValidate(Map.of("token", "bad-token"));
+
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("\"valid\":false"));
     }
 
     @Test
     void loginReturnsBadRequestWhenUsernameMissing() throws Exception {
-        HttpResponse<String> response = postLogin(Map.of("password", "123456"));
+        Map<String, String> payload = validLoginPayload("123456");
+        payload.remove("username");
+        HttpResponse<String> response = postLogin(payload);
 
         assertEquals(400, response.statusCode());
-        assertTrue(response.body().contains("\"message\":\"Username is required\""));
+        assertTrue(response.body().contains("Username is required"));
+    }
+
+    private Map<String, String> validLoginPayload(String password) {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("username", "john");
+        payload.put("password", password);
+        return payload;
     }
 
     private HttpResponse<String> postLogin(Map<String, String> payload) throws Exception {
+        return postJson("/auth/login", payload);
+    }
+
+    private HttpResponse<String> postValidate(Map<String, String> payload) throws Exception {
+        return postJson("/auth/validate", payload);
+    }
+
+    private HttpResponse<String> postJson(String path, Map<String, String> payload) throws Exception {
         String requestBody = payload.entrySet().stream()
                         .map(entry -> "\"" + entry.getKey() + "\":\"" + entry.getValue() + "\"")
                         .reduce("{", (json, field) -> json.length() == 1 ? json + field : json + "," + field)
                 + "}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:" + port + "/auth/login"))
+                .uri(URI.create("http://localhost:" + port + path))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private String extractAccessToken(String responseBody) {
+        Matcher matcher = Pattern.compile("\"access_token\":\"([^\"]+)\"").matcher(responseBody);
+        assertTrue(matcher.find(), "access token should be present in login response");
+        return matcher.group(1);
     }
 }

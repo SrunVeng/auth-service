@@ -17,16 +17,6 @@ java {
 
 repositories {
     mavenCentral()
-
-    maven {
-        name = "sdkRepository"
-        url =  url = uri("https://maven.pkg.github.com/SrunVeng/sdk-central")
-
-        credentials {
-            username = "srun veng"
-            password = "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"
-        }
-    }
 }
 
 dependencies {
@@ -40,6 +30,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testRuntimeOnly 'com.h2database:h2'
     implementation 'com.dcc:sdk-central:1.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'

@@ -6,6 +6,5 @@ import lombok.Data;
 public class LoginResultDto {
 
     private String accessToken;
-    private String refreshToken;
-    private String TokenType;
+    private String tokenType;
 }

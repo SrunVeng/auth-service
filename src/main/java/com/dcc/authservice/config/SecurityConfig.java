@@ -2,7 +2,6 @@ package com.dcc.authservice.config;
 
 import com.dcc.authservice.exception.RestAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +30,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http, RestAuthenticationEntryPoint restAuthenticationEntryPoint) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {})
                 .authorizeHttpRequests(endpoint -> endpoint.requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/auth/**",
                                 "/.well-known/jwks.json",
+                                "/health",
                                 "/actuator/health")
                         .permitAll()
                         .anyRequest()
@@ -70,9 +71,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtAuthenticationProvider jwtAuthenticationProvider(
-            @Qualifier("jwtDecoderRefreshToken") JwtDecoder jwtDecoderRefreshToken) {
-        JwtAuthenticationProvider provider = new JwtAuthenticationProvider(jwtDecoderRefreshToken);
+    JwtAuthenticationProvider jwtAuthenticationProvider(JwtDecoder jwtDecoder) {
+        JwtAuthenticationProvider provider = new JwtAuthenticationProvider(jwtDecoder);
         provider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
         return provider;
     }

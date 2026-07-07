@@ -30,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public TokenValidateResponseVo login(@Valid @RequestBody TokenValidateRequestVo requestVo) {
+    public TokenValidateResponseVo validate(@Valid @RequestBody TokenValidateRequestVo requestVo) {
         TokenValidateRequestDto requestDto = authMapper.toRequestDto(requestVo);
         TokenValidateResultDto login = authUserService.validate(requestDto);
         return authMapper.toResponseVo(login);

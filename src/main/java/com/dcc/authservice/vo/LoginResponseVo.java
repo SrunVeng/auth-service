@@ -9,6 +9,5 @@ import tools.jackson.databind.annotation.JsonNaming;
 public class LoginResponseVo {
 
     private String accessToken;
-    private String refreshToken;
-    private String TokenType;
+    private String tokenType;
 }

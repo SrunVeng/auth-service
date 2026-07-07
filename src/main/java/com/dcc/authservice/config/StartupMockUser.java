@@ -5,6 +5,7 @@ import com.dcc.authservice.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -12,21 +13,27 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartupMockUser {
 
-    private static final String MOCK_USERNAME = "john";
-    private static final String MOCK_PASSWORD = "123456";
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${demo.user.enabled:true}")
+    private boolean enabled;
+
+    @Value("${demo.user.username:john}")
+    private String username;
+
+    @Value("${demo.user.password:123456}")
+    private String password;
+
     @PostConstruct
     public void createMockUser() {
-        if (userRepository.findByuserName(MOCK_USERNAME) != null) {
+        if (!enabled || userRepository.findByuserName(username) != null) {
             return;
         }
 
         User user = new User();
-        user.setUserName(MOCK_USERNAME);
-        user.setPassword(passwordEncoder.encode(MOCK_PASSWORD));
+        user.setUserName(username);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRoles(List.of());
         user.setIsVerified(true);
         user.setIsBlock(false);
