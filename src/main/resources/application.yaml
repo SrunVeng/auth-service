@@ -4,6 +4,7 @@ server:
 auth:
   issuer: http://localhost:9000
   access-token-expiration-minutes: 60
+  secret-key: change-this-to-a-32-byte-minimum-secret
 
 spring:
   application:

@@ -1,11 +1,11 @@
 package com.dcc.authservice.exception;
 
-
 import com.dcc.sdkcentral.responseBuilder.ResponseMessage;
 import com.dcc.sdkcentral.responseBuilder.ResponseMessageBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +18,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -29,10 +27,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException authException
-    ) throws IOException {
+            HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException {
 
         ResponseMessage<Void> failed = responseMessageBuilder.failed();
         failed.setDevErrorCode(HttpStatus.UNAUTHORIZED.name());

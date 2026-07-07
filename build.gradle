@@ -20,11 +20,11 @@ repositories {
 
     maven {
         name = "sdkRepository"
-        url = uri("")
+        url =  url = uri("https://maven.pkg.github.com/SrunVeng/sdk-central")
 
         credentials {
-            username = ""
-            password = ""
+            username = "srun veng"
+            password = "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"
         }
     }
 }
@@ -46,7 +46,9 @@ dependencies {
     // Mapstruct
     compileOnly 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 }

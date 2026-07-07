@@ -2,28 +2,35 @@ package com.dcc.authservice.service.Impl;
 
 import com.dcc.authservice.dto.LoginRequestDto;
 import com.dcc.authservice.dto.LoginResultDto;
+import com.dcc.authservice.dto.TokenValidateRequestDto;
+import com.dcc.authservice.dto.TokenValidateResultDto;
 import com.dcc.authservice.service.AuthUserService;
+
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.Date;
 import java.util.stream.Collectors;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
 
 @Service
 @RequiredArgsConstructor
 public class AuthUserServiceImpl implements AuthUserService {
 
-    private final JwtEncoder jwtEncoderAccessToken;
     private final DaoAuthenticationProvider daoAuthenticationProvider;
-    private final JwtEncoder jwtEncoderRefreshToken;
+    @Value("${auth.secret-key}")
+    private String secretKey;
 
     @Override
     public LoginResultDto login(LoginRequestDto login) {
@@ -37,35 +44,28 @@ public class AuthUserServiceImpl implements AuthUserService {
 
         // Generate JWT token to response
 
-        // 1. Define JwtClaimSet  (Payload)
         Instant now = Instant.now();
-        JwtClaimsSet accessJwtClaimsSet = JwtClaimsSet.builder()
+        SecretKey signInKey = getSignInKey();
+        String accessToken = Jwts.builder()
                 .id(auth.getName())
                 .subject(auth.getName())
                 .issuer(auth.getName())
-                .issuedAt(now)
-                .expiresAt(now.plus(5, ChronoUnit.MINUTES))
-                .audience(List.of("REACT JS"))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(5, ChronoUnit.MINUTES)))
+                .audience().add("REACT JS").and()
                 .claim("scope", scope)
-                .build();
-
-        JwtClaimsSet refreshJwtClaimsSet = JwtClaimsSet.builder()
+                .signWith(signInKey)
+                .compact();
+        String refreshToken = Jwts.builder()
                 .id(auth.getName())
                 .subject(auth.getName())
                 .issuer(auth.getName())
-                .issuedAt(now)
-                .expiresAt(now.plus(5, ChronoUnit.DAYS))
-                .audience(List.of("REACT JS"))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(5, ChronoUnit.DAYS)))
+                .audience().add("REACT JS").and()
                 .claim("scope", scope)
-                .build();
-
-        // 2. Generate Token
-        String accessToken = jwtEncoderAccessToken
-                .encode(JwtEncoderParameters.from(accessJwtClaimsSet))
-                .getTokenValue();
-        String refreshToken = jwtEncoderRefreshToken
-                .encode(JwtEncoderParameters.from(refreshJwtClaimsSet))
-                .getTokenValue();
+                .signWith(signInKey)
+                .compact();
 
         LoginResultDto resultDto = new LoginResultDto();
         resultDto.setAccessToken(accessToken);
@@ -73,4 +73,32 @@ public class AuthUserServiceImpl implements AuthUserService {
         resultDto.setTokenType("AccessToken");
         return resultDto;
     }
+
+    @Override
+    public TokenValidateResultDto validate(TokenValidateRequestDto requestDto) {
+        TokenValidateResultDto resultDto = new TokenValidateResultDto();
+        try {
+            resultDto.setUserName(extractUsername(requestDto.getToken()));
+            resultDto.setValid(true);
+        } catch (Exception ex) {
+            resultDto.setValid(false);
+            resultDto.setUserName(null);
+        }
+        return resultDto;
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+    private SecretKey getSignInKey() {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
 }

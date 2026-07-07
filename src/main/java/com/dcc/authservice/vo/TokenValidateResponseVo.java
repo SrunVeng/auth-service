@@ -7,11 +7,8 @@ import tools.jackson.databind.annotation.JsonNaming;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class LoginRequestVo {
+public class TokenValidateResponseVo {
 
-    @NotBlank(message = "Username is required")
-    private String username;
-
-    @NotBlank(message = "Password is required")
-    private String password;
+    private boolean valid;
+    private String userName;
 }

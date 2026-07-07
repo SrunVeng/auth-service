@@ -28,9 +28,7 @@ public class AuthExceptionHandler {
         failed.setDevMessage(resolveMessage(ex));
         failed.setStatus(HttpStatus.UNAUTHORIZED);
 
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(failed);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failed);
     }
 
     private String resolveMessage(AuthenticationException ex) {
